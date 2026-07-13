@@ -14,6 +14,21 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Lock body scroll when menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+      document.body.style.touchAction = "none";
+    } else {
+      document.body.style.overflow = "";
+      document.body.style.touchAction = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+      document.body.style.touchAction = "";
+    };
+  }, [isOpen]);
+
   const links = [
     { href: "#home", label: "Home" },
     { href: "#about", label: "About" },
@@ -49,47 +64,60 @@ export default function Navbar() {
       {/* Fullscreen mobile menu */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div
-            className="fixed inset-0 bg-black z-[100] flex flex-col"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.3 }}
-          >
-            <div className="flex items-center justify-between px-6 py-5">
-              <span className="font-heading text-lg font-extrabold">
-                <span className="text-primary">O</span>lympic <span className="text-primary">G</span>ym
-              </span>
-              <button onClick={() => setIsOpen(false)} className="p-2 -mr-2">
-                <X className="w-6 h-6 text-white" />
-              </button>
-            </div>
+          <>
+            {/* Blurred backdrop */}
+            <motion.div
+              className="fixed inset-0 z-[99] backdrop-blur-lg bg-black/60"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              onClick={() => setIsOpen(false)}
+            />
 
-            <div className="flex-1 flex flex-col items-center justify-center gap-6">
-              {links.map((link, i) => (
+            {/* Menu panel - blurred translucent background */}
+            <motion.div
+              className="fixed inset-0 z-[100] flex flex-col overflow-hidden backdrop-blur-2xl bg-black/70"
+              initial={{ clipPath: "circle(0% at calc(100% - 40px) 30px)" }}
+              animate={{ clipPath: "circle(150% at calc(100% - 40px) 30px)" }}
+              exit={{ clipPath: "circle(0% at calc(100% - 40px) 30px)" }}
+              transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+            >
+              <div className="flex items-center justify-between px-6 py-5">
+                <span className="font-heading text-lg font-extrabold">
+                  <span className="text-primary">O</span>lympic <span className="text-primary">G</span>ym
+                </span>
+                <button onClick={() => setIsOpen(false)} className="p-2 -mr-2">
+                  <X className="w-6 h-6 text-white" />
+                </button>
+              </div>
+
+              <div className="flex-1 flex flex-col items-center justify-center gap-6">
+                {links.map((link, i) => (
+                  <motion.a
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setIsOpen(false)}
+                    className="font-heading text-4xl font-extrabold text-white active:text-primary transition-colors"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: i * 0.06 }}
+                  >
+                    {link.label}
+                  </motion.a>
+                ))}
                 <motion.a
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setIsOpen(false)}
-                  className="font-heading text-4xl font-extrabold text-white active:text-primary transition-colors"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: i * 0.06 }}
+                  href="/admin/login"
+                  className="mt-6 px-8 py-3 bg-primary text-white font-heading font-bold rounded-xl"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.3, delay: 0.5 }}
                 >
-                  {link.label}
+                  ADMIN
                 </motion.a>
-              ))}
-              <motion.a
-                href="/admin/login"
-                className="mt-6 px-8 py-3 bg-primary text-white font-heading font-bold rounded-xl"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.3, delay: 0.5 }}
-              >
-                ADMIN
-              </motion.a>
-            </div>
-          </motion.div>
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </motion.nav>

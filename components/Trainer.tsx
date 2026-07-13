@@ -46,7 +46,7 @@ export default function Trainer() {
               <p className="text-gray-400 text-xs font-body mt-1">Personal Trainer & Gym Owner</p>
               <div className="flex gap-2 mt-3">
                 <div className="glass rounded-lg px-2 py-1">
-                  <p className="text-[9px] text-primary font-bold">10+ YRS</p>
+                  <p className="text-[9px] text-primary font-bold">15+ YRS</p>
                 </div>
                 <div className="glass rounded-lg px-2 py-1">
                   <p className="text-[9px] text-primary font-bold">500+ CLIENTS</p>

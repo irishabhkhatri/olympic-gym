@@ -6,11 +6,11 @@ import {
   LayoutDashboard,
   Users,
   UserPlus,
-  AlertTriangle,
   LogOut,
   Dumbbell,
   Menu,
   X,
+  Globe,
 } from "lucide-react";
 
 const navItems = [
@@ -43,29 +43,31 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className="min-h-screen bg-black flex">
-      {/* Mobile overlay */}
+      {/* Mobile overlay - BLURRED background */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          className="fixed inset-0 bg-black/60 backdrop-blur-md z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar */}
       <aside
-        className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-card border-r border-border transform transition-transform lg:transform-none ${
+        className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-[#0a0a0a] border-r border-white/5 transform transition-transform lg:transform-none ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         }`}
       >
-        <div className="flex items-center gap-3 p-6 border-b border-border">
-          <Dumbbell className="w-8 h-8 text-primary" />
+        <div className="flex items-center gap-3 p-6 border-b border-white/5">
+          <Dumbbell className="w-7 h-7 text-[#e63946]" />
           <div>
-            <h2 className="font-bold text-lg">Olympic Gym</h2>
-            <p className="text-xs text-gray-500">Admin Panel</p>
+            <h2 className="font-bold text-base">
+              <span className="text-[#e63946]">O</span>lympic <span className="text-[#e63946]">G</span>ym
+            </h2>
+            <p className="text-[10px] text-gray-500">Admin Panel</p>
           </div>
         </div>
 
-        <nav className="p-4 space-y-2">
+        <nav className="p-4 space-y-1">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             return (
@@ -73,9 +75,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 key={item.href}
                 href={item.href}
                 onClick={() => setSidebarOpen(false)}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
                   isActive
-                    ? "bg-primary/10 text-primary border border-primary/30"
+                    ? "bg-[#e63946]/10 text-[#e63946] border border-[#e63946]/20"
                     : "text-gray-400 hover:text-white hover:bg-white/5"
                 }`}
               >
@@ -84,12 +86,21 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               </a>
             );
           })}
+
+          {/* View Website link */}
+          <a
+            href="/"
+            className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-blue-400 hover:bg-blue-500/5 transition-all mt-4"
+          >
+            <Globe className="w-5 h-5" />
+            View Website
+          </a>
         </nav>
 
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-border">
+        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-white/5">
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-400 hover:text-red-400 hover:bg-red-500/5 transition-colors w-full"
+            className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-red-400 hover:bg-red-500/5 transition-all w-full"
           >
             <LogOut className="w-5 h-5" />
             Logout
@@ -100,12 +111,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Main content */}
       <div className="flex-1 flex flex-col min-h-screen">
         {/* Mobile header */}
-        <header className="lg:hidden flex items-center justify-between p-4 border-b border-border bg-card">
+        <header className="lg:hidden flex items-center justify-between p-4 border-b border-white/5 bg-[#0a0a0a]">
           <button onClick={() => setSidebarOpen(true)} className="text-white">
             <Menu className="w-6 h-6" />
           </button>
-          <span className="font-bold">Olympic Gym Admin</span>
-          <div className="w-6" />
+          <span className="font-bold text-sm">
+            <span className="text-[#e63946]">O</span>lympic <span className="text-[#e63946]">G</span>ym Admin
+          </span>
+          <a href="/" className="text-gray-400">
+            <Globe className="w-5 h-5" />
+          </a>
         </header>
 
         <main className="flex-1 p-4 lg:p-8 overflow-auto">{children}</main>

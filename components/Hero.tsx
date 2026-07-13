@@ -1,33 +1,55 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { useRef, useState, useEffect } from "react";
+import { motion, useScroll, useTransform, AnimatePresence, useInView } from "framer-motion";
 import { ArrowRight } from "lucide-react";
-import FloatingObjects from "./FloatingObjects";
+
+function AnimatedCounter({ target, suffix = "+", duration = 2000 }: { target: number; suffix?: string; duration?: number }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
+
+  useEffect(() => {
+    if (!isInView) return;
+    let start = 0;
+    const steps = 60;
+    const increment = target / steps;
+    const interval = duration / steps;
+    const timer = setInterval(() => {
+      start += increment;
+      if (start >= target) {
+        setCount(target);
+        clearInterval(timer);
+      } else {
+        setCount(Math.floor(start));
+      }
+    }, interval);
+    return () => clearInterval(timer);
+  }, [isInView, target, duration]);
+
+  return <span ref={ref}>{count}{suffix}</span>;
+}
 
 export default function Hero() {
   const ref = useRef(null);
   const [logoFlying, setLogoFlying] = useState(false);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.2]);
   const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
   const y = useTransform(scrollYProgress, [0, 1], [0, -100]);
 
   return (
     <section ref={ref} id="home" className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Parallax BG */}
-      <motion.div className="absolute inset-0" style={{ scale }}>
+      {/* Background - no scale to keep image sharp */}
+      <div className="absolute inset-0">
         <img src="/hero-bg.png" alt="" className="w-full h-full object-cover object-top" />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-black/30" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/40" />
-      </motion.div>
+        <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/40 to-black/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/30" />
+      </div>
 
       {/* Floating gradient orbs */}
       <div className="orb w-[300px] h-[300px] bg-primary/40 -top-20 -right-20 animate-float-slow" />
       <div className="orb w-[200px] h-[200px] bg-blue-500/20 bottom-20 -left-20 animate-float-medium" />
 
-      {/* 3D Floating gym objects */}
-      <FloatingObjects />
 
       {/* Content */}
       <motion.div className="relative z-10 w-full px-6 pt-28 pb-16" style={{ opacity, y }}>
@@ -139,27 +161,25 @@ export default function Hero() {
           <ArrowRight className="w-5 h-5" />
         </motion.a>
 
-        {/* Stats - floating glass cards */}
+        {/* Stats - floating glass cards with animated counters */}
         <motion.div
           className="flex gap-3 mt-12 overflow-x-auto pb-2 -mx-2 px-2"
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 2.6 }}
         >
-          {[
-            { num: "500+", label: "Members" },
-            { num: "10+", label: "Years" },
-            { num: "24/7", label: "Support" },
-          ].map((stat, i) => (
-            <div
-              key={i}
-              className="glass rounded-2xl px-5 py-4 min-w-[100px] text-center card-3d animate-float-slow"
-              style={{ animationDelay: `${i * 0.5}s` }}
-            >
-              <p className="text-xl font-bold text-white font-heading">{stat.num}</p>
-              <p className="text-[10px] text-gray-400 tracking-wider uppercase mt-1">{stat.label}</p>
-            </div>
-          ))}
+          <div className="glass rounded-2xl px-5 py-4 min-w-[100px] text-center card-3d animate-float-slow" style={{ animationDelay: "0s" }}>
+            <p className="text-xl font-bold text-white font-heading"><AnimatedCounter target={500} /></p>
+            <p className="text-[10px] text-gray-400 tracking-wider uppercase mt-1">Members</p>
+          </div>
+          <div className="glass rounded-2xl px-5 py-4 min-w-[100px] text-center card-3d animate-float-slow" style={{ animationDelay: "0.5s" }}>
+            <p className="text-xl font-bold text-white font-heading"><AnimatedCounter target={15} /></p>
+            <p className="text-[10px] text-gray-400 tracking-wider uppercase mt-1">Years</p>
+          </div>
+          <div className="glass rounded-2xl px-5 py-4 min-w-[100px] text-center card-3d animate-float-slow" style={{ animationDelay: "1s" }}>
+            <p className="text-xl font-bold text-white font-heading">24/7</p>
+            <p className="text-[10px] text-gray-400 tracking-wider uppercase mt-1">Support</p>
+          </div>
         </motion.div>
       </motion.div>
 
