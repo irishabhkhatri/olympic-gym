@@ -1,36 +1,82 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Olympic Gym - Management System
 
-## Getting Started
+Web application for **Olympic Gym**, Raisinghnagar (Owner: Anil Verma).
 
-First, run the development server:
+## Features
+
+- Modern landing page with black/red/white theme
+- Admin panel with member registration
+- Fee tracking with due date calculations
+- WhatsApp reminder links (one-click)
+- Multiple plans: Monthly (₹500), Quarterly (₹1400), Annual (₹5000)
+- Member photo upload
+- Responsive design (mobile-friendly)
+
+## Tech Stack
+
+- **Frontend**: Next.js 16 + Tailwind CSS
+- **Database**: Supabase (PostgreSQL)
+- **Storage**: Supabase Storage (member photos)
+- **Hosting**: Vercel (free tier)
+
+## Setup Instructions
+
+### 1. Supabase Setup (Database)
+
+1. Go to [supabase.com](https://supabase.com) and create a free account
+2. Create a new project
+3. Go to **SQL Editor** and run the contents of `supabase-schema.sql`
+4. Go to **Storage** > Create bucket named `member-photos` (make it public)
+5. Go to **Settings > API** and copy:
+   - Project URL
+   - anon/public key
+
+### 2. Configure Environment
+
+Copy `.env.local.example` to `.env.local` and fill in your Supabase credentials:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.local.example .env.local
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Edit `.env.local`:
+```
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=your-secure-password
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Run Locally
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm install
+npm run dev
+```
 
-## Learn More
+Open http://localhost:3000
 
-To learn more about Next.js, take a look at the following resources:
+### 4. Deploy to Vercel (Free)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Push code to GitHub
+2. Go to [vercel.com](https://vercel.com) and import the repository
+3. Add environment variables in Vercel dashboard
+4. Deploy!
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Admin Login
 
-## Deploy on Vercel
+- URL: `/admin/login`
+- Default credentials: `admin` / `olympic2024`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Adding Photos
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Gym/Gallery photos**: Add images to `public/gallery/` (name them gym1.jpg through gym6.jpg)
+- **Member photos**: Uploaded via admin panel, stored in Supabase Storage
+
+## WhatsApp Reminders
+
+When fees are due, admin sees a green "Remind" button next to each member. Clicking it opens WhatsApp with a pre-filled message in Hindi requesting payment.
+
+## Daily Cron (Vercel)
+
+The `/api/dues` endpoint is called daily at 8 AM (configured in `vercel.json`) to check for due fees.
