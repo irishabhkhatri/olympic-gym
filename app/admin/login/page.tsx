@@ -109,7 +109,7 @@ export default function AdminLogin() {
         </form>
 
         <p className="text-center text-gray-600 text-xs mt-6">
-          Default: admin / olympic2024
+          Olympic Gym Management System
         </p>
       </div>
     </div>
