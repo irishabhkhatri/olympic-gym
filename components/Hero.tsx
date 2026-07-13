@@ -39,11 +39,11 @@ export default function Hero() {
 
   return (
     <section ref={ref} id="home" className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Background - no scale to keep image sharp */}
+      {/* Background - HD, minimal overlay to keep image prominent */}
       <div className="absolute inset-0">
-        <img src="/hero-bg.png" alt="" className="w-full h-full object-cover object-top" />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/40 to-black/20" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/30" />
+        <img src="/hero-bg.png" alt="" className="w-full h-full object-cover object-center" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
       </div>
 
       {/* Floating gradient orbs */}

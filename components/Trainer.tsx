@@ -17,6 +17,12 @@ export default function Trainer() {
       <div ref={ref} className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Image */}
+          <a
+            href="https://www.instagram.com/olympic.gym.rsnr/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block"
+          >
           <motion.div
             className="relative mx-auto w-[280px] md:w-[350px] lg:w-full lg:max-w-[400px] perspective"
             initial={{ opacity: 0, scale: 0.85, rotateY: -10 }}
@@ -54,6 +60,7 @@ export default function Trainer() {
               </div>
             </motion.div>
           </motion.div>
+          </a>
 
           {/* Text - visible on desktop */}
           <motion.div
